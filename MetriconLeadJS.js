@@ -32,7 +32,19 @@ function CallNurtureProcess(primaryControl) {
                                             request.open("POST", url, true);
                                             request.setRequestHeader('Content-Type', 'application/json');
                                             request.send(parameterId);
-                                            console.log('Completed');
+                                            request.onreadystatechange = function() {
+                                                // Added to handle the response
+                                                // Page refresh when based on the results
+                                                if (this.readyState === 4) {
+                                                    request.onreadystatechange = null;
+                                                    if (this.status === 202) {
+                                                        alert("Lead status is set to Nurture");
+                                                        Xrm.Page.data.refresh(true);
+                                                    } else {
+                                                        alert("Lead status update failed");
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
